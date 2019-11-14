@@ -1,6 +1,6 @@
 {
   "name": "react-storage-provider",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "dist/build.js",
   "scripts": {
@@ -22,6 +22,8 @@
     "react": "^16.9.0"
   },
   "devDependencies": {
+    "prop-types": "^15.7.2",
+    "react": "^16.9.0",
     "babel-eslint": "^10.0.3",
     "@babel/core": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.4.0",
