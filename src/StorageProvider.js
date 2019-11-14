@@ -4,6 +4,7 @@ import LocalStorage from './LocalStorage';
 
 const STORAGE_KEY = '@storage';
 const StorageContext = React.createContext();
+const STORAGE_READY = Symbol(STORAGE_KEY);
 
 class StorageProvider extends PureComponent {
   static propTypes = {
@@ -27,7 +28,8 @@ class StorageProvider extends PureComponent {
      *
      * @type {*}
      */
-    this.storageReady = false;
+
+    this.state = { [STORAGE_READY]: false };
     this.storage = {
       get: this.get,
       set: this.set,
@@ -39,8 +41,7 @@ class StorageProvider extends PureComponent {
     const { storage } = this.props;
     // Load state from physical storage to memory
     const parsedStorage = await storage.getItem(STORAGE_KEY);
-    this.storageReady = true;
-    this.setState(this._parseStorageData(parsedStorage));
+    this.setState({ ...this._parseStorageData(parsedStorage), [STORAGE_READY]: true });
 
     // Listen storage event and mutate memory state for cross-tab
     if (storage instanceof LocalStorage) {
@@ -118,7 +119,7 @@ class StorageProvider extends PureComponent {
       storage: this.storage,
     };
 
-    if (!this.storageReady) return null;
+    if (!this.state[STORAGE_READY]) return null;
 
     return (
       <StorageContext.Provider value={value}>
