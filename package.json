@@ -1,6 +1,6 @@
 {
   "name": "react-storage-provider",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/build.js",
   "scripts": {
@@ -19,7 +19,7 @@
   "homepage": "https://github.com/simpleneutrino/react-storage-provider#readme",
   "peerDependencies": {
     "prop-types": "^15.7.2",
-    "react": "^16.11.0"
+    "react": "^16.9.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
