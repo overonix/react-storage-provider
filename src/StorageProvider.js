@@ -4,7 +4,6 @@ import LocalStorage from './LocalStorage';
 
 const STORAGE_KEY = '@storage';
 const StorageContext = React.createContext();
-const STORAGE_READY = Symbol(STORAGE_KEY);
 
 class StorageProvider extends PureComponent {
   static propTypes = {
@@ -29,7 +28,7 @@ class StorageProvider extends PureComponent {
      * @type {*}
      */
 
-    this.state = { [STORAGE_READY]: false };
+    this.state = { [STORAGE_KEY]: {}, $STORAGE_READY: false };
     this.storage = {
       get: this.get,
       set: this.set,
@@ -41,7 +40,7 @@ class StorageProvider extends PureComponent {
     const { storage } = this.props;
     // Load state from physical storage to memory
     const parsedStorage = await storage.getItem(STORAGE_KEY);
-    this.setState({ ...this._parseStorageData(parsedStorage), [STORAGE_READY]: true });
+    this.setState({ [STORAGE_KEY]: this._parseStorageData(parsedStorage), $STORAGE_READY: true });
 
     // Listen storage event and mutate memory state for cross-tab
     if (storage instanceof LocalStorage) {
@@ -57,7 +56,7 @@ class StorageProvider extends PureComponent {
             }
           });
 
-          this.setState(newValue);
+          this.setState({ [STORAGE_KEY]: newValue });
         }
       });
     }
@@ -86,7 +85,7 @@ class StorageProvider extends PureComponent {
    *
    * @return {string | *}
    */
-  get = (key) => this.state[key];
+  get = (key) => this.state[STORAGE_KEY][key];
 
   /**
    * Set item to storage
@@ -96,7 +95,7 @@ class StorageProvider extends PureComponent {
    */
   set = (key, value) => {
     const { storage } = this.props;
-    this.setState({ [key]: value }, async () => {
+    this.setState((state) => ({ [STORAGE_KEY]: { ...state[STORAGE_KEY], [key]: value } }), async () => {
       await storage.setItem(STORAGE_KEY, JSON.stringify(this.state));
     });
   };
@@ -106,9 +105,9 @@ class StorageProvider extends PureComponent {
    */
   remove = (key) => {
     const { storage } = this.props;
-    const newState = { ...this.state, [key]: undefined };
+    const newState = { ...this.state[STORAGE_KEY], [key]: undefined };
 
-    this.setState(newState, async () => {
+    this.setState({ [STORAGE_KEY]: newState }, async () => {
       await storage.setItem(STORAGE_KEY, JSON.stringify(newState));
     });
   };
@@ -119,7 +118,7 @@ class StorageProvider extends PureComponent {
       storage: this.storage,
     };
 
-    if (!this.state[STORAGE_READY]) return null;
+    if (!this.state.$STORAGE_READY) return null;
 
     return (
       <StorageContext.Provider value={value}>
