@@ -7,29 +7,25 @@ const logError = () => {
   `));
 };
 
-
 const noop = () => new Promise(((resolve) => resolve()));
 const noopStorage = {
   getItem: noop,
   setItem: noop,
 };
 
-const checkStorageOnError = (type) => {
-  if (typeof window !== 'object' || !window[type]) {
-    logError();
-    return noopStorage;
-  }
-  return null;
-};
+const isWebStorageAvailable = (storage) => typeof window === 'object' && window[storage];
 
 const storageFactory = (storage = '') => {
-  if (storage === 'localStorage') {
-    return checkStorageOnError(storage) || new LocalStorage();
+  if (storage === 'localStorage' && isWebStorageAvailable(storage)) {
+    return new LocalStorage();
   }
+
   if (storage.getItem && storage.setItem) {
     return storage;
   }
+
   logError();
+
   return noopStorage;
 };
 
