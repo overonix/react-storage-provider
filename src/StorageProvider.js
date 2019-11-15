@@ -28,7 +28,7 @@ class StorageProvider extends PureComponent {
      *
      * @type {*}
      */
-    this.providedStorage = storageFactory(props.storage);
+
     this.state = { [STORAGE_KEY]: {}, $STORAGE_READY: false };
     this.storage = {
       get: this.get,
@@ -38,6 +38,8 @@ class StorageProvider extends PureComponent {
   }
 
   async componentDidMount() {
+    this.providedStorage = await storageFactory(this.props.storage);
+
     // Load state from physical storage to memory
     const parsedStorage = await this.providedStorage.getItem(STORAGE_KEY);
     this.setState({ [STORAGE_KEY]: this._parseStorageData(parsedStorage), $STORAGE_READY: true });

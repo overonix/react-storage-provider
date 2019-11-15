@@ -2,7 +2,7 @@ import LocalStorage from './LocalStorage';
 
 const logError = () => {
   console.error(new Error(`
-    LOCAL STORAGE ISN'T AVAILABLE
+    STORAGE ISN'T AVAILABLE
     Try to pass your storage to storage prop in <StorageProvider/>
   `));
 };
@@ -15,15 +15,34 @@ const noopStorage = {
 
 const isWebStorageAvailable = (storage) => typeof window === 'object' && window[storage];
 
-const storageFactory = (storage = '') => {
+const checkStorageAPI = async (storage) => {
+  try {
+    const testKey = 'react-storage-provider__test';
+    const testValue = 'test';
+
+    await storage.setItem(testKey, testValue);
+    const storageValue = await storage.getItem(testKey);
+
+    if (storageValue === testValue) {
+      return true;
+    }
+
+    return false;
+  } catch (e) {
+    return false;
+  }
+};
+
+const storageFactory = async (storage) => {
   if (storage === 'localStorage' && isWebStorageAvailable(storage)) {
     return new LocalStorage();
   }
 
   /**
-   * Check if provided storage has storage API methods
+   * Check if provided storage has storage API methods and works like storage
    */
-  if (storage.getItem && storage.setItem) {
+
+  if (typeof storage === 'object' && await checkStorageAPI(storage)) {
     return storage;
   }
 
