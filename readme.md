@@ -1,5 +1,5 @@
 # React Storage Provider
-React Storage Provider binds your storage with react. By default it uses localStorage, also you can use asyncStorage with React Native.
+React Storage Provider binds your storage with react. By default it uses localStorage.
 
 # Installation
 ```
@@ -9,7 +9,7 @@ npm install --save react-storage-provider
 
 ### Providing The Storage
 First we need to make the storage available to our app. To do this, we wrap our app with the `<StorageProvider />` . It has `storage` prop, that by default is localStorage.
-If you wanna use sessionStorage or asyncStorage in react native you should pass it
+If you wanna use sessionStorage or asyncStorage from @react-native-community/async-storage lib in react native you should pass it
 `<StorageProvider storage={asyncStorage} />`
 
 ### Connecting the Components
@@ -32,5 +32,5 @@ export default withStorage(Component);
 ```
 export default withStorage(['token', 'locale'])(SignIn);
 ```
-Provides `token, locale` values from storage to component props.
+Provides `token, locale` values from storage to component props and subscribes to their changes.
 
