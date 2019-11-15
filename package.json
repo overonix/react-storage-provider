@@ -1,6 +1,6 @@
 {
   "name": "react-storage-provider",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "",
   "main": "dist/build.js",
   "scripts": {
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/simpleneutrino/react-storage-provider.git"
+    "url": "git+https://github.com/overonix/react-storage-provider.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/simpleneutrino/react-storage-provider/issues"
+    "url": "https://github.com/overonix/react-storage-provider/issues"
   },
-  "homepage": "https://github.com/simpleneutrino/react-storage-provider#readme",
+  "homepage": "https://github.com/overonix/react-storage-provider#readme",
   "peerDependencies": {
     "prop-types": "^15.7.2",
     "react": "^16.9.0"
