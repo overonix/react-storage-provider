@@ -20,6 +20,9 @@ const storageFactory = (storage = '') => {
     return new LocalStorage();
   }
 
+  /**
+   * Check if provided storage has storage API methods
+   */
   if (storage.getItem && storage.setItem) {
     return storage;
   }
