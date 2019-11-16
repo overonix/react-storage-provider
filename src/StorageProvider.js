@@ -1,22 +1,22 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import LocalStorage from './LocalStorage';
 import storageFactory from './storageFactory';
 
 const STORAGE_KEY = '@storage';
+const isWebStorageAvailable = (storage) => typeof window === 'object' && window[storage] && Storage;
 const StorageContext = React.createContext();
 
 class StorageProvider extends PureComponent {
   static propTypes = {
     children: PropTypes.element.isRequired,
-    storage: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({
+    storage: PropTypes.shape({
       getItem: PropTypes.func.isRequired,
       setItem: PropTypes.func.isRequired,
-    })]),
+    }),
   };
 
   static defaultProps = {
-    storage: 'localStorage',
+    storage: isWebStorageAvailable('localStorage') ? window.localStorage : {},
   };
 
   constructor(props) {
@@ -45,7 +45,7 @@ class StorageProvider extends PureComponent {
     this.setState({ [STORAGE_KEY]: this._parseStorageData(parsedStorage), $STORAGE_READY: true });
 
     // Listen storage event and mutate memory state for cross-tab
-    if (this.providedStorage instanceof LocalStorage) {
+    if (isWebStorageAvailable('localStorage') && this.providedStorage instanceof Storage) {
       window.addEventListener('storage', (e) => {
         if (e.key === STORAGE_KEY) {
           const newValue = this._parseStorageData(e.newValue);

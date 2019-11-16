@@ -1,5 +1,3 @@
-import LocalStorage from './LocalStorage';
-
 const logError = () => {
   console.error(new Error(`
     STORAGE ISN'T AVAILABLE
@@ -13,7 +11,6 @@ const noopStorage = {
   setItem: noop,
 };
 
-const isWebStorageAvailable = (storage) => typeof window === 'object' && window[storage];
 
 const checkStorageAPI = async (storage) => {
   try {
@@ -21,23 +18,16 @@ const checkStorageAPI = async (storage) => {
     const testValue = 'test';
 
     await storage.setItem(testKey, testValue);
-    const storageValue = await storage.getItem(testKey);
+    await storage.getItem(testKey);
+    await storage.removeItem(testKey);
 
-    if (storageValue === testValue) {
-      return true;
-    }
-
-    return false;
+    return true;
   } catch (e) {
     return false;
   }
 };
 
 const storageFactory = async (storage) => {
-  if (storage === 'localStorage' && isWebStorageAvailable(storage)) {
-    return new LocalStorage();
-  }
-
   /**
    * Check if provided storage has storage API methods and works like storage
    */
