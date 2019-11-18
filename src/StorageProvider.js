@@ -41,8 +41,8 @@ class StorageProvider extends PureComponent {
     this.providedStorage = await storageFactory(this.props.storage);
 
     // Load state from physical storage to memory
-    const parsedStorage = await this.providedStorage.getItem(STORAGE_KEY);
-    this.setState({ [STORAGE_KEY]: this._parseStorageData(parsedStorage), $STORAGE_READY: true });
+    const storageData = await this.providedStorage.getItem(STORAGE_KEY);
+    this.setState({ [STORAGE_KEY]: this._parseStorageData(storageData), $STORAGE_READY: true });
 
     // Listen storage event and mutate memory state for cross-tab
     if (isWebStorageAvailable('localStorage') && this.providedStorage instanceof Storage) {
