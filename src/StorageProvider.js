@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import LocalStorage from './LocalStorage';
+import storageFactory from './storageFactory';
 
 const STORAGE_KEY = '@storage';
+const isWebStorageAvailable = (storage) => typeof window === 'object' && window[storage] && Storage;
 const StorageContext = React.createContext();
 
 class StorageProvider extends PureComponent {
@@ -15,7 +16,7 @@ class StorageProvider extends PureComponent {
   };
 
   static defaultProps = {
-    storage: new LocalStorage(),
+    storage: isWebStorageAvailable('localStorage') ? window.localStorage : {},
   };
 
   constructor(props) {
@@ -37,13 +38,14 @@ class StorageProvider extends PureComponent {
   }
 
   async componentDidMount() {
-    const { storage } = this.props;
+    this.providedStorage = await storageFactory(this.props.storage);
+
     // Load state from physical storage to memory
-    const parsedStorage = await storage.getItem(STORAGE_KEY);
-    this.setState({ [STORAGE_KEY]: this._parseStorageData(parsedStorage), $STORAGE_READY: true });
+    const storageData = await this.providedStorage.getItem(STORAGE_KEY);
+    this.setState({ [STORAGE_KEY]: this._parseStorageData(storageData), $STORAGE_READY: true });
 
     // Listen storage event and mutate memory state for cross-tab
-    if (storage instanceof LocalStorage) {
+    if (isWebStorageAvailable('localStorage') && this.providedStorage instanceof Storage) {
       window.addEventListener('storage', (e) => {
         if (e.key === STORAGE_KEY) {
           const newValue = this._parseStorageData(e.newValue);
@@ -94,9 +96,8 @@ class StorageProvider extends PureComponent {
    * @param value
    */
   set = (key, value) => {
-    const { storage } = this.props;
     this.setState((state) => ({ [STORAGE_KEY]: { ...state[STORAGE_KEY], [key]: value } }), async () => {
-      await storage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+      await this.providedStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
     });
   };
 
@@ -104,11 +105,10 @@ class StorageProvider extends PureComponent {
    * Remove item from storage
    */
   remove = (key) => {
-    const { storage } = this.props;
     const newState = { ...this.state[STORAGE_KEY], [key]: undefined };
 
     this.setState({ [STORAGE_KEY]: newState }, async () => {
-      await storage.setItem(STORAGE_KEY, JSON.stringify(newState));
+      await this.providedStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
     });
   };
 
