@@ -97,7 +97,7 @@ class StorageProvider extends PureComponent {
    */
   set = (key, value) => {
     this.setState((state) => ({ [STORAGE_KEY]: { ...state[STORAGE_KEY], [key]: value } }), async () => {
-      await this.providedStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+      await this.providedStorage.setItem(STORAGE_KEY, JSON.stringify(this.state[STORAGE_KEY]));
     });
   };
 
