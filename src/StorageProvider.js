@@ -105,10 +105,8 @@ class StorageProvider extends PureComponent {
    * Remove item from storage
    */
   remove = (key) => {
-    const newState = { ...this.state[STORAGE_KEY], [key]: undefined };
-
-    this.setState({ [STORAGE_KEY]: newState }, async () => {
-      await this.providedStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
+    this.setState((prevState) => ({ [STORAGE_KEY]: { ...prevState[STORAGE_KEY], [key]: undefined } }), async () => {
+      await this.providedStorage.setItem(STORAGE_KEY, JSON.stringify(this.state[STORAGE_KEY]));
     });
   };
 
