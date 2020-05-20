@@ -21,7 +21,7 @@ import { StorageContext } from './StorageProvider';
  *
  * @return {[{ [key]: value }, storage]}
  */
-const useStorage = (keys) => {
+const useStorage = (keys = []) => {
   const { storage } = useContext(StorageContext);
 
   const stateKeys = keys.reduce((acc, key) => ({ ...acc, [key]: storage.get(key) }), {});
