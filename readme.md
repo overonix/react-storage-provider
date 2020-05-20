@@ -16,7 +16,7 @@ If you wanna use sessionStorage or asyncStorage from @react-native-community/asy
 React Storage Provider provides a `withStorage` function for you to read and write values from the store.
 
 #### Get storage object to props examples: 
-```
+```javascript
 export default withStorage(Component);
 ```
  Provides `storage` object in `Component` props.
@@ -29,7 +29,7 @@ export default withStorage(Component);
  `remove(key)` - sets `key` value to `undefined`
 
 #### Get storage values to props examples: 
-```
+```javascript
 export default withStorage(['token', 'locale'])(SignIn);
 ```
 Provides `token, locale` values from storage to component props and subscribes to their changes.
