@@ -4,7 +4,8 @@ import storageFactory from './storageFactory';
 
 const STORAGE_KEY = '@storage';
 const isWebStorageAvailable = (storage) => typeof window === 'object' && window[storage] && Storage;
-const StorageContext = React.createContext();
+
+export const StorageContext = React.createContext();
 
 class StorageProvider extends PureComponent {
   static propTypes = {
