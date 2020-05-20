@@ -34,3 +34,15 @@ export default withStorage(['token', 'locale'])(SignIn);
 ```
 Provides `token, locale` values from storage to component props and subscribes to their changes.
 
+### Using a hook
+#### Get storage object examples:
+Return `storage` object 
+```javascript
+const [, storage] = useStorage();
+```
+#### Subscribe to storage keys:
+Return an object with the keys that were passed to the hook arguments and `storage` object 
+```javascript
+const [{ token, locale }, storage] = useStorage(['token', 'locale']);
+```
+
